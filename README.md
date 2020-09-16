@@ -7,7 +7,7 @@
 [Installation](#Installation)  
 [Running](#Running)  
 [Build](#Build)     
-[Troubleshooting](#FAQ/Troubleshooting)  
+[Troubleshooting](#Troubleshooting)  
 
 
 # Description
@@ -227,20 +227,19 @@ Retrieve Linux binaries:
     go build  -o  dmdb_exporter main.go
 
 
-# FAQ/Troubleshooting
+# Troubleshooting
 
 ## Unable to convert current value to float (metric=par,metri...in.go:285
 
 DmService is trying to send a value that we cannot convert to float. This could be anything like 'UNLIMITED' or 'UNDEFINED' or 'WHATEVER'.
-
+DmService is a test go driver, there are some incompatible writing, please use simple writing, try more.
 In this case, you must handle this problem by testing it in the SQL request. Here an example available in default metrics:
 
 ```toml
 [[metric]]
-context = "resource"
-labels = [ "resource_name" ]
-metricsdesc = { current_utilization= "Generic counter metric from v$resource_limit view in Oracle (current value).", limit_value="Generic counter metric from v$resource_limit view in Oracle (UNLIMITED: -1)." }
-request="SELECT resource_name,current_utilization,CASE WHEN TRIM(limit_value) LIKE 'UNLIMITED' THEN '-1' ELSE TRIM(limit_value) END as limit_value FROM v$resource_limit"
+context = "sessions"
+metricsdesc = { free_percent= "Gauge metric with count of available sessions free percent by DmService." }
+request = "SELECT ((PARA_VALUE-(SELECT COUNT(1) FROM  V$SESSIONS)) / PARA_VALUE ) as free_percent FROM v$dm_ini WHERE PARA_NAME='MAX_SESSIONS';"
 ```
 
 If the value of limite_value is 'UNLIMITED', the request send back the value -1.
