@@ -3,12 +3,12 @@
 
 ##### Table of Contents  
 
-[Description](#description)  
-[Installation](#installation)  
-[Running](#running)  
-[Grafana](#grafana)  
-[Troubleshooting](#troubleshooting)  
-[Operating principles](operating-principles.md)
+[Description](#Description)  
+[Installation](#Installation)  
+[Running](#Running)  
+[Build](#Build)
+[Troubleshooting](#FAQ/Troubleshooting)  
+
 
 # Description
 
@@ -52,7 +52,7 @@ Ensure that the environment variable DATA_SOURCE_NAME is set correctly before st
 # using a complete url:
 export DATA_SOURCE_NAME=dm://SYSDBA:SYSDBA@localhost:5236?autoCommit=true
 # Then run the exporter
-/path/to/binary/dmdb_exporter --log.level error --web.listen-address 0.0.0.0:9161
+/path/to/binary/dmdb_exporter --log.level error  --default.metrics  /path/of/the/default-metrics.toml --web.listen-address 0.0.0.0:9161
 ```
 
 # Integration with System D
@@ -63,9 +63,8 @@ Create file **/etc/systemd/system/dmdb_exporter.service** with the following con
     Description=Service for dm telemetry client
     After=network.target
     [Service]
-    Type=oneshot
-    #User=dmdb_exporter
-    ExecStart=/path/of/the/dmdb_exporter --log.level error --web.listen-address 0.0.0.0:9161
+    Environment=DATA_SOURCE_NAME=dm://SYSDBA:SYSDBA@localhost:5236?autoCommit=true
+    ExecStart=/path/of/the/dmdb_exporter  --default.metrics  /path/of/the/default-metrics.toml --web.listen-address 0.0.0.0:9161
     [Install]
     WantedBy=multi-user.target
 
@@ -218,14 +217,14 @@ An example Grafana dashboard is available [here](https://grafana.com/dashboards/
 
 To build  Alpine image, run the following command:
 
-    make docker
+    docker build . -t dmdb_exporter
 
 
 ## Linux binaries
 
 Retrieve Linux binaries:
 
-    go build main.go 
+    go build  -o  dmdb_exporter main.go
 
 
 # FAQ/Troubleshooting

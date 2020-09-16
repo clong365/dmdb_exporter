@@ -66,7 +66,7 @@ var (
 	additionalMetrics Metrics
 )
 
-// Exporter collects Oracle DB metrics. It implements prometheus.Collector.
+// Exporter collects DmService DB metrics. It implements prometheus.Collector.
 type Exporter struct {
 	dsn             string
 	duration, error prometheus.Gauge
@@ -104,7 +104,7 @@ func connect(dsn string) *sql.DB {
 	return db
 }
 
-// NewExporter returns a new Oracle DB exporter for the provided DSN.
+// NewExporter returns a new DmService DB exporter for the provided DSN.
 func NewExporter(dsn string) *Exporter {
 	db := connect(dsn)
 	return &Exporter{
@@ -368,7 +368,7 @@ func GeneratePrometheusMetrics(db *sql.DB, parse func(row map[string]string) err
 
 }
 
-// Oracle gives us some ugly names back. This function cleans things up for Prometheus.
+// DB gives us some ugly names back. This function cleans things up for Prometheus.
 func cleanName(s string) string {
 	s = strings.Replace(s, " ", "_", -1) // Remove spaces
 	s = strings.Replace(s, "(", "", -1)  // Remove open parenthesis
