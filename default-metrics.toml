@@ -1,0 +1,34 @@
+[[metric]]
+context = "session"
+metricsdesc = { active= "Gauge metric with count of active sessions by DmService." }
+request = "SELECT COUNT(*) as active FROM V$SESSIONS WHERE STATE='ACTIVE';"
+
+[[metric]]
+context = "session"
+metricsdesc = { used= "Gauge metric with count of used sessions by DmService." }
+request = "SELECT COUNT(*) as used FROM  V$SESSIONS ;"
+
+[[metric]]
+context = "session"
+metricsdesc = { max= "Gauge metric with count of  sessions by DmService." }
+request = " SELECT PARA_VALUE as max FROM v$dm_ini WHERE PARA_NAME='MAX_SESSIONS';"
+
+
+
+[[metric]]
+context = "tablespace"
+labels = [ "tablespace_name" ]
+metricsdesc = { free_space = "Generic counter metric of tablespaces free space MB in DmService.", total_space = "Generic counter metric of tablespaces total space MB in DmService.", free_percent = "Generic counter metric of tablespaces free percent in DmService." }
+request = '''
+select
+t.name tablespace_name,
+sum(d.free_size*SF_GET_PAGE_SIZE()/1024/1024)  free_space,
+sum(d.total_size*SF_GET_PAGE_SIZE()/1024/1024)  total_space,
+sum(d.free_size*100)/sum(d.total_size)  free_percent
+from
+v$tablespace t,
+v$datafile d
+where
+t.id=d.group_id
+group by t.name;
+'''

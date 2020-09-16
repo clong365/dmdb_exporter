@@ -1,0 +1,25 @@
+{
+  "language": "en-US",
+  "messages": [
+    {
+      "id": "error.dsn.invalidSchema",
+      "translation": "DSN must start with dm://"
+    },
+    {
+      "id": "error.communicationError",
+      "translation": "Communication  error"
+    },
+    {
+      "id": "error.msgCheckError",
+      "translation": "Message check error"
+    },
+    {
+      "id": "error.unkownNetWork",
+      "translation": "Unkown net work"
+    },
+    {
+      "id": "error.invalidConn",
+      "translation": "Invalid connection"
+    }
+  ]
+}

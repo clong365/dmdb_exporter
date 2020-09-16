@@ -1,0 +1,25 @@
+{
+  "language": "zh-Hans",
+  "messages": [
+    {
+      "id": "error.dsn.invalidSchema",
+      "translation": "DSN串必须以dm://开头"
+    },
+    {
+      "id": "error.communicationError",
+      "translation": "网络通信异常"
+    },
+    {
+      "id": "error.msgCheckError",
+      "translation": "消息校验异常"
+    },
+    {
+      "id": "error.unkownNetWork",
+      "translation": "未知的网络"
+    },
+    {
+      "id": "error.invalidConn",
+      "translation": "连接失效"
+    }
+  ]
+}
