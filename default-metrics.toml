@@ -1,12 +1,8 @@
 [[metric]]
 context = "session"
-metricsdesc = { active= "Gauge metric with count of active sessions by DmService." }
-request = "SELECT COUNT(*) as active FROM V$SESSIONS WHERE STATE='ACTIVE';"
-
-[[metric]]
-context = "session"
-metricsdesc = { used= "Gauge metric with count of used sessions by DmService." }
-request = "SELECT COUNT(*) as used FROM  V$SESSIONS ;"
+labels = [ "state" ]
+metricsdesc = { value= "Gauge metric with count of state sessions by DmService." }
+request = "select count(*) as value , state  from v$sessions group by  state;"
 
 [[metric]]
 context = "session"
@@ -32,3 +28,16 @@ where
 t.id=d.group_id
 group by t.name;
 '''
+
+[[metric]]
+context = "systeminfo"
+metricsdesc = { n_cpu= "cpu 个数.",total_phy_size= "物理内存总大小.", free_phy_size= "剩余物理内存大小.", total_disk_size= "磁盘总大小.", free_disk_size= "剩余磁盘大小.", load_one_average= "每分钟平均负载.", load_five_average= "每五分钟平均负载.", load_fifteen_average= "每十五分钟平均负载.", cpu_user_rate= "用户级的 cpu 使用率.", cpu_system_rate= "系统级的 cpu 使用率.", cpu_idle_rate= "idle 的 cpu 使用率.",  send_bytes_per_second= "当前每秒发送字节数.", receive_bytes_per_second= "当前每秒接收字节数.",send_bytes_total="发送的总字节数.",receive_bytes_total="接收的总字节数." }
+request = " select n_cpu,total_phy_size,free_phy_size,total_disk_size,free_disk_size,load_one_average,load_five_average,load_fifteen_average,cpu_user_rate,cpu_system_rate,cpu_idle_rate,send_bytes_per_second,receive_bytes_per_second,send_bytes_total,receive_bytes_total from v$systeminfo;"
+metricstype = { send_bytes_total = "counter",receive_bytes_total = "counter" }
+
+[[metric]]
+context = "sysstat"
+labels = [ "name" ]
+metricsdesc = { value= "Gauge metric with count of  sysstat by DmService." }
+request = " select name,stat_val as value from v$sysstat;"
+metricstype = { value = "counter" }
