@@ -1,25 +1,26 @@
-FROM golang:1.14 AS build
-WORKDIR /go/src/dmdb_exporter
+FROM golang:1.22.4 AS build
 
-ENV GOPROXY https://goproxy.io
 ENV GO111MODULE on
+ENV GOPROXY https://goproxy.cn,direct
 
+WORKDIR /build
 COPY . .
-RUN go build  -o  dmdb_exporter main.go
 
+RUN go mod tidy
+RUN go build -o dm-db-exporter
 
-FROM frolvlad/alpine-glibc:glibc-2.29
+FROM ubuntu:22.04
 LABEL authors=""
 LABEL maintainer=""
 
-ENV VERSION dev-0.1.0
+ENV VERSION 0.0.1
 ENV DATA_SOURCE_NAME dm://SYSDBA:SYSDBA@localhost:5236?autoCommit=true
 
-COPY --from=build /go/src/dmdb_exporter/dmdb_exporter /dmdb_exporter
-ADD ./default-metrics.toml /default-metrics.toml
-
-RUN chmod 755 /dmdb_exporter
+WORKDIR /opt/dm-db-exporter
+COPY --from=build /build/dm-db-exporter /opt/dm-db-exporter
+ADD default-metrics.toml /opt/dm-db-exporter/default-metrics.toml
+RUN chmod 755 /opt/dm-db-exporter/dm-db-exporter
 
 EXPOSE 9161
 
-ENTRYPOINT ["/dmdb_exporter"]
+ENTRYPOINT ["/opt/dm-db-exporter/dm-db-exporter"]
